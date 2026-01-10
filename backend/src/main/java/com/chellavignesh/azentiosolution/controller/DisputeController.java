@@ -58,12 +58,5 @@ public class DisputeController {
         service.refund(id, r.actor());
     }
 
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> handleDbError(DataAccessException ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ex.getMostSpecificCause().getMessage());
-    }
-
 }
 
