@@ -1,0 +1,179 @@
+{
+  "info": {
+    "_postman_id": "ad1c57ef-40c4-446a-b8bb-b23a7b9eed37",
+    "name": "Azentio – Smart Dispute & Refund Orchestrator Copy",
+    "description": "DB-first Dispute & Refund Orchestrator APIs. Business logic enforced in PostgreSQL PL/pgSQL. Spring Boot acts as REST façade.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Disputes",
+      "item": [
+        {
+          "name": "Create Dispute",
+          "id": "f02d88b3-ce09-4d66-be4c-e569c4c0cf67",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"txnId\": 1,\n  \"custId\": 1,\n  \"disputeType\": \"DUPLICATE_CHARGE\",\n  \"claimAmount\": 1200,\n  \"actor\": \"CUSTOMER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/disputes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "disputes"
+              ]
+            },
+            "description": "Creates a new dispute. Eligibility and validation are enforced in DB."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Disputes",
+          "id": "148e27a2-72a6-4b7c-9a91-e03c139815b0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/disputes?custId=1&status=APPROVED",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "disputes"
+              ],
+              "query": [
+                {
+                  "key": "custId",
+                  "value": "1"
+                },
+                {
+                  "key": "status",
+                  "value": "APPROVED"
+                }
+              ]
+            },
+            "description": "Search disputes by customer and optional status."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Dispute Detail",
+          "id": "57541e17-1286-4ca3-a613-4ef1a77ab2a0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/disputes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "disputes",
+                "1"
+              ]
+            },
+            "description": "Fetch detailed dispute and transaction information."
+          },
+          "response": []
+        },
+        {
+          "name": "Decide Dispute (Approve / Manual)",
+          "id": "a4e7e2d8-7d07-4a70-8240-4f732548983c",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actor\": \"SYSTEM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/disputes/1/decision",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "disputes",
+                "1",
+                "decision"
+              ]
+            },
+            "description": "Triggers DB-driven decisioning logic for a dispute."
+          },
+          "response": []
+        },
+        {
+          "name": "Issue Refund",
+          "id": "24115be3-960d-4c6b-b244-1424b01e8c15",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actor\": \"SYSTEM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/disputes/1/refund",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "disputes",
+                "1",
+                "refund"
+              ]
+            },
+            "description": "Issues refund for an APPROVED dispute. DB enforces idempotency."
+          },
+          "response": []
+        }
+      ],
+      "id": "4d5c3f69-bc84-406f-9930-9b8c6bef3ac9"
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "DB Health Check",
+          "id": "a0ffe48b-c49f-4602-97df-14fa89d44f23",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health/db",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health",
+                "db"
+              ]
+            },
+            "description": "Checks database connectivity using a lightweight DB query."
+          },
+          "response": []
+        }
+      ],
+      "id": "28b32f2e-04d9-47c8-ab8f-d4e7cf8ce65e"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+server:
+  port: 6060
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dispute_db
+    username: dispute_user
+    password: dispute_pass
+    driver-class-name: org.postgresql.Driver
+
+  jdbc:
+    template:
+      query-timeout: 30
+
+logging:
+  level:
+    root: INFO
+    org.springframework.jdbc.core: DEBUG
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
