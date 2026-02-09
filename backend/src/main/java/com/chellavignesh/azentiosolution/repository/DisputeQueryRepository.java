@@ -18,11 +18,11 @@ public class DisputeQueryRepository {
 
     public List<DisputeSummaryResponse> search(Long custId, String status) {
         return jdbc.query("""
-            SELECT dispute_id, status, claim_amount
-            FROM dispute
-            WHERE cust_id = ?
-              AND (? IS NULL OR status = ?)
-        """, (rs, i) ->
+                            SELECT dispute_id, status, claim_amount
+                            FROM dispute
+                            WHERE cust_id = ?
+                              AND (CAST(? AS VARCHAR) IS NULL OR status = CAST(? AS VARCHAR))
+                        """, (rs, i) ->
                         new DisputeSummaryResponse(
                                 rs.getLong("dispute_id"),
                                 rs.getString("status"),
@@ -34,11 +34,11 @@ public class DisputeQueryRepository {
 
     public DisputeDetailResponse getDetail(Long disputeId) {
         return jdbc.queryForObject("""
-            SELECT d.*, t.amount AS txn_amount, t.status AS txn_status
-            FROM dispute d
-            JOIN txn t ON t.txn_id = d.txn_id
-            WHERE d.dispute_id = ?
-        """, (rs, i) -> new DisputeDetailResponse(
+                    SELECT d.*, t.amount AS txn_amount, t.status AS txn_status
+                    FROM dispute d
+                    JOIN txn t ON t.txn_id = d.txn_id
+                    WHERE d.dispute_id = ?
+                """, (rs, i) -> new DisputeDetailResponse(
                 rs.getLong("dispute_id"),
                 rs.getString("status"),
                 rs.getBigDecimal("claim_amount"),

@@ -7,9 +7,6 @@ import com.chellavignesh.azentiosolution.dto.response.DisputeDetailResponse;
 import com.chellavignesh.azentiosolution.dto.response.DisputeSummaryResponse;
 import com.chellavignesh.azentiosolution.service.DisputeService;
 import jakarta.validation.Valid;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

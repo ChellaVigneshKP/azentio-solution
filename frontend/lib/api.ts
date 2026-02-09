@@ -1,6 +1,8 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
-export async function createDispute(payload: any) {
+/* ---------------- CREATE ---------------- */
+
+export async function createDispute(payload: any): Promise<void> {
     const res = await fetch(`${BASE_URL}/disputes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -8,45 +10,75 @@ export async function createDispute(payload: any) {
     });
 
     if (!res.ok) {
-        const err = await res.json();
-        throw err;
+        throw new Error(await res.text());
     }
 }
 
-export async function searchDisputes(custId: number, status?: string) {
+/* ---------------- SEARCH ---------------- */
+
+export async function searchDisputes(
+    custId: number,
+    status?: string
+): Promise<any[]> {
     const params = new URLSearchParams({ custId: String(custId) });
     if (status) params.append("status", status);
 
     const res = await fetch(`${BASE_URL}/disputes?${params}`);
-    return res.json();
+
+    if (!res.ok) {
+        throw new Error(await res.text());
+    }
+
+    const data = await res.json();
+    if (!Array.isArray(data)) {
+        throw new Error("Invalid response format");
+    }
+
+    return data;
 }
 
-export async function getDispute(id: number) {
+/* ---------------- DETAIL ---------------- */
+
+export async function getDispute(id: number): Promise<any> {
     const res = await fetch(`${BASE_URL}/disputes/${id}`);
+    if (!res.ok) throw new Error(await res.text());
     return res.json();
 }
 
-export async function decideDispute(id: number, actor: string) {
+/* ---------------- DECISION ---------------- */
+
+export async function decideDispute(
+    id: number,
+    actor: string
+): Promise<void> {
     const res = await fetch(`${BASE_URL}/disputes/${id}/decision`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ actor }),
     });
 
-    if (!res.ok) throw await res.json();
+    if (!res.ok) throw new Error(await res.text());
 }
 
-export async function refundDispute(id: number, actor: string) {
+/* ---------------- REFUND ---------------- */
+
+export async function refundDispute(
+    id: number,
+    actor: string
+): Promise<void> {
     const res = await fetch(`${BASE_URL}/disputes/${id}/refund`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ actor }),
     });
 
-    if (!res.ok) throw await res.json();
+    if (!res.ok) throw new Error(await res.text());
 }
 
-export async function checkDbHealth() {
+/* ---------------- HEALTH ---------------- */
+
+export async function checkDbHealth(): Promise<string> {
     const res = await fetch(`${BASE_URL}/health/db`);
+    if (!res.ok) throw new Error("DB health check failed");
     return res.text();
 }
