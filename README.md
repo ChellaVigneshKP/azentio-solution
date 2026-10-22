@@ -225,3 +225,4 @@ SELECT * FROM dispute_status_history;
 * Status changes tracked in `dispute_status_history`
 * Refund constrained to **one per dispute**
 * DB constraints prevent invalid state transitions
+* Audit & Data Integrity
